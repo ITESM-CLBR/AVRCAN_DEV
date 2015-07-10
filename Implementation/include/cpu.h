@@ -28,6 +28,8 @@
 #include <avr/iocan128.h>
 #include <board_configs.h>
 #define	__AVR_AT90CAN128__	1
+
+/** AT90CAN BOARD XTAL  */
 #define OSCSPEED						16000000		/* in Hz */
 
 
