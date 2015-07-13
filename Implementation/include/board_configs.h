@@ -23,9 +23,21 @@
 #define board_configs_EXTERN
 #endif /* board_configs_C_ */
 
+
+
 /** \addtogroup board_configs
  *  @{
  */
+#define CPU_POWER_5V				5
+#define CPU_POWER_3V3				3
+
+#define	__AVR_AT90CAN128__			1
+#define BOARD_MAIN_CLOCK			16000000
+#define POWER_BOARD_LEVEL			CPU_POWER_5V	/**< POWER_BOARD_LEVEL SUPPLY CONFIG */
+
+
+
+
 #define USART_INTERRUPT_RX_SUPPORT 0  	/**< RX Interrup Support */
 #define USART_INTERRUPT_TX_SUPPORT 0	/**< TX Interrup Support */
 

@@ -27,10 +27,10 @@
 #include <avr/interrupt.h>
 #include <avr/iocan128.h>
 #include <board_configs.h>
-#define	__AVR_AT90CAN128__	1
+
+
 
 /** AT90CAN BOARD XTAL  */
-#define OSCSPEED						16000000		/* in Hz */
-
+#define OSCSPEED					BOARD_MAIN_CLOCK		/* in Hz */
 
 #endif /* IMPLEMENTATION_INCLUDE_CPU_H_ */

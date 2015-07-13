@@ -28,8 +28,9 @@
 
 
 //usart_EXTERN	
-
-
+usart_EXTERN void usart_init(uint32_t BaudRate);
+usart_EXTERN void usart_enable_interrupts(void);
+usart_EXTERN void usart_disable_interrupts(void);
 
 
 #endif /* IMPLEMENTATION_SRC_USART_H_ */
