@@ -12,3 +12,12 @@ Documents/
 #	ECLIPSE		#
 #########################
 .settings/
+.cproject
+
+
+## TEMP IGNORE
+*.elf
+*.hex
+*.lss
+*.map
+*.srec
