@@ -26,7 +26,7 @@
 /* Included Headers */
 
 #include <cpu.h>
-#include <stdtypes.h>	
+#include <stdint.h>
 
 //*********************************************************
 //Watchdog Timer Prescale Select

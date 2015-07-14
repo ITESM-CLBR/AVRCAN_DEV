@@ -24,7 +24,7 @@
 #endif /* usart_C_ */
 
 /* Included Headers */
-#include <stdtypes.h>	
+#include <stdint.h>
 
 
 //usart_EXTERN	

@@ -53,7 +53,7 @@
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
-void usart_init(uint32_t BaudRate)
+void usart_init(uint32_t Baud)
 {
 	uint32_t BaudRate = OSCSPEED / (16 * Baud) - 1;	//calculate BaudRate
 
