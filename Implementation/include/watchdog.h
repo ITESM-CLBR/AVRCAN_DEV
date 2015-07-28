@@ -77,4 +77,8 @@
 
 #endif
 
+
+watchdog_EXTERN void watchdog_off(void);
+watchdog_EXTERN void wdt_reset(void);
+
 #endif/* IMPLEMENTATION_INCLUDE_WATCHDOG_H_ */

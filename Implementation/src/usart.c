@@ -32,10 +32,76 @@
 /*******************************************************************************************/
 /*    M A C R O S                                                                          */
 /*******************************************************************************************/
-#define GPIO_TX_USART0	(1<<1)
-#define BAUDREG  ((OSCSPEED / (16 * 9600)) - 1)
-#define cbi(port, bit) (port) &= ~(1 << (bit))
-#define sbi(port, bit) (port) |= (1 << (bit))
+
+typedef enum{
+	GPIO_IN=0,
+	GPIO_OUT
+}GPIO_TYPES;
+
+typedef struct
+{
+	uint16_t ubrr;
+	uint8_t  u2x;
+}USART_CONFIG;
+
+#define GPIO_TX_USART0			(1<<1)
+#define BAUDREG  				((OSCSPEED / (16 * 9600)) - 1)
+
+#define cbi(port, bit) 			(port) &= ~(1 << (bit))
+#define sbi(port, bit) 			(port) |= (1 << (bit))
+
+#define RX_DATA_COMPLETE		(1<<RXC0)
+#define TX_DATA_COMPLETE		(1<<TXC0)
+
+#define SET_GPIO_INPUT(ddr_port, bit) (ddr_port) &= ~(1 << (bit))
+#define SET_GPIO_OUTPUT(ddr_port, bit) (ddr_port) |= (1 << (bit))
+
+
+//---------------------------------------
+//   16MHZ Matrix
+//---------------------------------------
+#ifdef UBRR_16MHZ_MATRIX
+#if DOUBLE_SPEED_OPERATION == 0
+
+const USART_CONFIG usart_table[MAX_SUPPORTED_BAUDRATE]={
+      {416	    ,0},  	//	error -0.10%
+      {207	    ,0},  	//	error  0.20%
+      {103	    ,0},  	//	error  0.20%
+      {68	    ,0},  	//	error  0.60%
+      {51	    ,0},  	//	error  0.20%
+      {34	    ,0},  	//	error -0.80%
+      {25	    ,0},  	//	error  0.20%
+      {16	    ,0},  	//	error  2.10%
+      {12	    ,0},  	//	error  0.20%
+      {8	    ,0},  	//	error -3.50%
+      {3	    ,0},  	//	error  8.50%
+      {3	    ,0},  	//	error  0.00%
+      {1	    ,0},  	//	error  0.00%
+      {0	    ,0}  	//	error  0.00%
+    };
+
+#else
+
+const USART_CONFIG usart_table[MAX_SUPPORTED_BAUDRATE]={
+      {832	    ,1},  	//	error  0.00%
+      {416	    ,1},  	//	error -0.10%
+      {207	    ,1},  	//	error  0.20%
+      {138	    ,1},  	//	error -0.10%
+      {103	    ,1},  	//	error  0.20%
+      {68	    ,1},  	//	error  0.60%
+      {51	    ,1},  	//	error  0.20%
+      {34	    ,1},  	//	error -0.80%
+      {25	    ,1},  	//	error  0.20%
+      {16	    ,1},  	//	error  2.10%
+      {8	    ,1},  	//	error -3.50%
+      {7	    ,1},  	//	error  0.00%
+      {3	    ,1},  	//	error  0.00%
+      {1	    ,1} 	//	error 0.00%
+    };
+
+#endif
+#endif
+
 
 /*******************************************************************************************/
 /*    F U N C T I O N   P R O T O T Y P E S                                                */
@@ -53,12 +119,17 @@
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
-void usart_init(uint32_t Baud)
+void usart_init(BAUD_RATE_CONFIGS Baud)
 {
-	uint32_t BaudRate = OSCSPEED / (16 * Baud) - 1;	//calculate BaudRate
+	uint16_t BaudRate =0;
+	uint8_t  u2x_double_speed=0;
 
 	//GPIO ENABLE
-	DDRE  += GPIO_TX_USART0;		//Led set as output (Bit4 = 1), TX set as output (Bit1 = 1)
+	SET_GPIO_OUTPUT(USART0_DDR_PORT,TX_USART0_PIN);
+	SET_GPIO_INPUT(USART0_DDR_PORT,RX_USART0_PIN);
+
+	BaudRate=(uint16_t) usart_table[Baud].ubrr;
+	u2x_double_speed=usart_table[Baud].u2x;
 
 	//set BaudRate into registers
 	UBRR0H = (unsigned char) (BaudRate>>8);
@@ -71,10 +142,12 @@ void usart_init(uint32_t Baud)
 	// Bit 3 – TXENn: Transmitter Enable
 	// Bit 1 – RXB8n: Receive Data Bit 8
 	// Bit 0 – TXB8n: Transmit Data Bit 8
-	UCSR0B= (1<<RXEN0) | (1<<TXEN0);
 
-	UCSR0C =(1<<UCSZ01) | (1<<UCSZ00);
-    //UCSR0C = 0b00000110;		//set frame format (8 bits, 1 stop bit)
+	UCSR0B= (1<<RXEN0) | // RX USART ENABLE
+			(1<<TXEN0);	 // TX USART ENABLE
+
+	UCSR0C = (USART_Char_Size_8_bit <<UCSZ00);
+
 	/*Enable Interrupts*/
 	usart_enable_interrupts();
 }
@@ -126,7 +199,7 @@ void usart_disable_interrupts(void){
  ****************************************************************************************/
 unsigned char UART_Receive()
 {
-	if (UCSR0A & 0b10000000)
+	if (UCSR0A & 0b10000000)  //  if(UCSRA & RX_DATA_COMPLETE)
 		return UDR0;
 	else
 		return 0;

@@ -69,16 +69,27 @@ $(BSP_OBJECTS_DIR)/%.o:$(BSP_SRC)/%.c
 	$(AVR_CC) -x c $(AVR_CC_FLAGS) $(BSP_HEADERS) "$<" -o "$@"
 	@echo "Finished building: $<"
 
+default: all
+
 all: $(PROJECT_NAME).elf $(PROJECT_NAME).hex
-	$(AVR_SIZE) $(PROJECT_NAME).elf
-	
+	$(AVR_SIZE) -C --mcu=at90can128 $(PROJECT_NAME).elf
+
+size:
+	$(AVR_SIZE) -C --mcu=at90can128 $(PROJECT_NAME).elf
+
 $(PROJECT_NAME).elf:$(BSP_OBJECTS)
-	$(AVR_CC) -o $(PROJECT_NAME).elf $(BSP_OBJECTS) -Wl,-Map="$(PROJECT_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=at90can128
+	$(AVR_CC) -o $(PROJECT_NAME).elf $(BSP_OBJECTS) -Wl,-Map="$(PROJECT_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=at90can128	
 
 $(PROJECT_NAME).hex:
 	$(AVR_OBJ_COPY) -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "$(PROJECT_NAME).elf" "$(PROJECT_NAME).hex"
 	$(AVR_OBJ_DUMP) -h -S "$(PROJECT_NAME).elf" > "$(PROJECT_NAME).lss"
 	$(AVR_OBJ_COPY) -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "$(PROJECT_NAME).elf" "$(PROJECT_NAME).srec"
+    
+
+flash:
+	@echo "Dragon Flash"
+	./atprogram -t jtagice3 -i jtag -d at90can128 chiperase
+	./atprogram -t jtagice3 -i jtag -d at90can128 program -f $(PROJECT_NAME).elf
 
 clean:
-	-rm -rf $(BSP_OBJECTS) $(PROJECT_NAME).elf $(PROJECT_NAME).map
+	-rm -rf $(BSP_OBJECTS) $(PROJECT_NAME).elf $(PROJECT_NAME).map $(PROJECT_NAME).lss  $(PROJECT_NAME).srec $(PROJECT_NAME).hex
