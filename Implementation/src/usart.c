@@ -29,6 +29,7 @@
 #include <usart.h>
 #include <cpu.h>
 
+
 /*******************************************************************************************/
 /*    M A C R O S                                                                          */
 /*******************************************************************************************/
@@ -119,7 +120,7 @@ const USART_CONFIG usart_table[MAX_SUPPORTED_BAUDRATE]={
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
-void usart_init(BAUD_RATE_CONFIGS Baud)
+void usart_init(uint8_t Baud)
 {
 	uint16_t BaudRate =0;
 	uint8_t  u2x_double_speed=0;
@@ -147,7 +148,7 @@ void usart_init(BAUD_RATE_CONFIGS Baud)
 			(1<<TXEN0);	 // TX USART ENABLE
 
 	UCSR0C = (USART_Char_Size_8_bit <<UCSZ00);
-
+	UART_Transmit((uint8_t)0x00);
 	/*Enable Interrupts*/
 	usart_enable_interrupts();
 }
@@ -197,7 +198,7 @@ void usart_disable_interrupts(void){
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
-unsigned char UART_Receive()
+uint8_t UART_Receive()
 {
 	if (UCSR0A & 0b10000000)  //  if(UCSRA & RX_DATA_COMPLETE)
 		return UDR0;
@@ -215,12 +216,12 @@ unsigned char UART_Receive()
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
-void UART_Transmit(unsigned char Data)
+void UART_Transmit(uint8_t Data)
 {
 	while (!(UCSR0A & 0b00100000)){
 
 	}
-	UDR0 = Data;
+	UDR0 = (uint8_t)Data;
 }
 /**
  * @}

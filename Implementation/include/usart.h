@@ -64,9 +64,9 @@ typedef enum{
 
 
 //usart_EXTERN	
-usart_EXTERN void usart_init(BAUD_RATE_CONFIGS BaudRate);
+usart_EXTERN void usart_init(uint8_t BaudRate);
 usart_EXTERN void usart_enable_interrupts(void);
 usart_EXTERN void usart_disable_interrupts(void);
-
+usart_EXTERN void UART_Transmit(uint8_t Data);
 
 #endif /* IMPLEMENTATION_SRC_USART_H_ */

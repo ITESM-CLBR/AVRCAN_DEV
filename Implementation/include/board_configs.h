@@ -49,6 +49,20 @@
 #define LED0_PORT								PORTE
 #define LED0_DDR_PORT							DDRE
 #define LED0_PIN								PE4
+
+#define LED_TX_PORT								PORTA
+#define LED_TX_DDR_PORT							DDRA
+#define LED_TX_PIN								PA7
+
+#define LED_RX_PORT								PORTA
+#define LED_RX_DDR_PORT							DDRA
+#define LED_RX_PIN								PA6
+
+#define LED_Err_PORT							PORTA
+#define LED_Err_DDR_PORT						DDRA
+#define LED_Err_PIN								PA5
+
+
 /** @}*/
 
 

@@ -25,7 +25,7 @@ AVR_CC_FLAGS= -funsigned-char
 AVR_CC_FLAGS+= -funsigned-bitfields
 
 #No optimization, optimize for speed (level 1 - 3), optimize for size
-AVR_CC_FLAGS+= -O1
+AVR_CC_FLAGS+= -Os
 
 #Prepare functions for garbage collection, if a function is never used, its memory will be scrapped
 AVR_CC_FLAGS+= -ffunction-sections
@@ -43,7 +43,7 @@ AVR_CC_FLAGS+= -fshort-enums
 AVR_CC_FLAGS+= -mrelax
 
 #Debug Level
-AVR_CC_FLAGS+= -g2
+AVR_CC_FLAGS+= -g0
 
 # All warnings
 AVR_CC_FLAGS+= -Wall
@@ -66,24 +66,24 @@ BSP_OBJECTS= \
 $(BSP_OBJECTS_DIR)/%.o:$(BSP_SRC)/%.c
 	@echo "Building file: $@"
 	@echo Invoking: AVR/GNU Linker : 4.8.1
-	$(AVR_CC) -x c $(AVR_CC_FLAGS) $(BSP_HEADERS) "$<" -o "$@"
+	@$(AVR_CC) -x c $(AVR_CC_FLAGS) $(BSP_HEADERS) "$<" -o "$@"
 	@echo "Finished building: $<"
 
 default: all
 
 all: $(PROJECT_NAME).elf $(PROJECT_NAME).hex
-	$(AVR_SIZE) -C --mcu=at90can128 $(PROJECT_NAME).elf
+	@$(AVR_SIZE) -C --mcu=at90can128 $(PROJECT_NAME).elf
 
 size:
-	$(AVR_SIZE) -C --mcu=at90can128 $(PROJECT_NAME).elf
+	@$(AVR_SIZE) -C --mcu=at90can128 $(PROJECT_NAME).elf
 
 $(PROJECT_NAME).elf:$(BSP_OBJECTS)
-	$(AVR_CC) -o $(PROJECT_NAME).elf $(BSP_OBJECTS) -Wl,-Map="$(PROJECT_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=at90can128	
+	@$(AVR_CC) -o $(PROJECT_NAME).elf $(BSP_OBJECTS) -Wl,-Map="$(PROJECT_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=at90can128	
 
 $(PROJECT_NAME).hex:
-	$(AVR_OBJ_COPY) -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "$(PROJECT_NAME).elf" "$(PROJECT_NAME).hex"
-	$(AVR_OBJ_DUMP) -h -S "$(PROJECT_NAME).elf" > "$(PROJECT_NAME).lss"
-	$(AVR_OBJ_COPY) -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "$(PROJECT_NAME).elf" "$(PROJECT_NAME).srec"
+	@$(AVR_OBJ_COPY) -O ihex -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures  "$(PROJECT_NAME).elf" "$(PROJECT_NAME).hex"
+	@$(AVR_OBJ_DUMP) -h -S "$(PROJECT_NAME).elf" > "$(PROJECT_NAME).lss"
+	@$(AVR_OBJ_COPY) -O srec -R .eeprom -R .fuse -R .lock -R .signature -R .user_signatures "$(PROJECT_NAME).elf" "$(PROJECT_NAME).srec"
     
 
 flash:
