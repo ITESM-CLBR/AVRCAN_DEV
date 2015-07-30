@@ -1,6 +1,6 @@
 /****************************************************************** 
-* Indicator_Driver.h
-* Created on: Jul 29, 2015
+* can_types.h
+* Created on: Jul 30, 2015
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -14,26 +14,21 @@
 *© 2015
 *****************************************************************/ 
  
-#ifndef IMPLEMENTATION_INCLUDE_INDICATOR_DRIVER_H_
-#define IMPLEMENTATION_INCLUDE_INDICATOR_DRIVER_H_
+#ifndef AVRCAN_DEV_IMPLEMENTATION_INCLUDE_CAN_TYPES_H_
+#define AVRCAN_DEV_IMPLEMENTATION_INCLUDE_CAN_TYPES_H_
 
-#ifndef Indicator_Driver_C_
-#define Indicator_Driver_EXTERN extern
+#ifndef can_types_C_
+#define can_types_EXTERN extern
 #else
-#define Indicator_Driver_EXTERN
-#endif /* Indicator_Driver_C_ */
+#define can_types_EXTERN
+#endif /* can_types_C_ */
 
-#include <cpu.h>
 /* Included Headers */
-typedef enum{
-	LED_INDICATOR_ON=0,
-	LED_INDICATOR_OFF
-}Ind_states;
+#include <stdint.h>
 
 
-Indicator_Driver_EXTERN void Led_Indicators_Init(void);
-Indicator_Driver_EXTERN void Led_Tx(uint8_t state);
-Indicator_Driver_EXTERN void Led_Rx(uint8_t state);
-Indicator_Driver_EXTERN void Led_Err(uint8_t state);
+typedef uint32_t CAN_ID_type;
 
-#endif /* IMPLEMENTATION_INCLUDE_INDICATOR_DRIVER_H_ */
+
+
+#endif /* AVRCAN_DEV_IMPLEMENTATION_INCLUDE_CAN_TYPES_H_ */

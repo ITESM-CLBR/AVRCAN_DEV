@@ -25,7 +25,9 @@
 
 /* Included Headers */
 
-
+/** \addtogroup hardware_init
+ *  @{
+ */
 #include <board_configs.h>
 
 #define pcbi(port, bit) 			(port) &= ~(1 << (bit))
@@ -56,5 +58,7 @@
 #define Pin_Config_Err() \
  DDR_OUTPUT(LED_Err_PIN,LED_Err_DDR_PORT); \
  psbi(LED_Err_PORT,LED_Err_PIN);
+
+/** @}*/
 
 #endif /* IMPLEMENTATION_INCLUDE_HARDWARE_INIT_H_ */
