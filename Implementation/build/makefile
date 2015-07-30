@@ -49,7 +49,7 @@ AVR_CC_FLAGS+= -g0
 AVR_CC_FLAGS+= -Wall
 
 # MCU Declaration
-AVR_CC_FLAGS+= -mmcu=at90can128
+AVR_CC_FLAGS+= -mmcu=at90can128 -D F_CPU=16000000UL 
 
 AVR_CC_FLAGS+= -c
 
@@ -59,6 +59,7 @@ AVR_CC_FLAGS+= -std=gnu99
 BSP_OBJECTS= \
 	$(BSP_OBJECTS_DIR)/usart.o \
 	$(BSP_OBJECTS_DIR)/watchdog.o \
+	$(BSP_OBJECTS_DIR)/Indicator_Driver.o \
 	$(BSP_OBJECTS_DIR)/main.o
 
 
