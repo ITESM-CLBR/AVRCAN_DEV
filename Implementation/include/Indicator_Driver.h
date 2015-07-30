@@ -23,13 +23,19 @@
 #define Indicator_Driver_EXTERN
 #endif /* Indicator_Driver_C_ */
 
+#include <cpu.h>
 /* Included Headers */
+typedef enum{
+	LED_INDICATOR_ON=0,
+	LED_INDICATOR_OFF
+}Ind_states;
 
 
 
 //Indicator_Driver_EXTERN	
-
-
-
+Indicator_Driver_EXTERN void Led_Indicators_Init(void);
+Indicator_Driver_EXTERN void Led_Tx(uint8_t state);
+Indicator_Driver_EXTERN void Led_Rx(uint8_t state);
+Indicator_Driver_EXTERN void Led_Err(uint8_t state);
 
 #endif /* IMPLEMENTATION_INCLUDE_INDICATOR_DRIVER_H_ */
