@@ -200,7 +200,7 @@ void usart_disable_interrupts(void){
  ****************************************************************************************/
 uint8_t UART_Receive()
 {
-	if (UCSR0A & 0b10000000)  //  if(UCSRA & RX_DATA_COMPLETE)
+	if (UCSR0A & RX_DATA_COMPLETE)  //  if(UCSRA & RX_DATA_COMPLETE)
 		return UDR0;
 	else
 		return 0;
@@ -218,7 +218,7 @@ uint8_t UART_Receive()
  ****************************************************************************************/
 void UART_Transmit(uint8_t Data)
 {
-	while (!(UCSR0A & 0b00100000)){
+	while (!(UCSR0A & TX_DATA_COMPLETE )){
 
 	}
 	UDR0 = (uint8_t)Data;
