@@ -52,7 +52,7 @@ typedef struct
 #define sbi(port, bit) 			(port) |= (1 << (bit))
 
 #define RX_DATA_COMPLETE		(1<<RXC0)
-#define TX_DATA_COMPLETE		(1<<TXC0)
+#define TX_DATA_COMPLETE		(1<<5)
 
 #define SET_GPIO_INPUT(ddr_port, bit) (ddr_port) &= ~(1 << (bit))
 #define SET_GPIO_OUTPUT(ddr_port, bit) (ddr_port) |= (1 << (bit))
