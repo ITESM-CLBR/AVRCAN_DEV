@@ -60,11 +60,8 @@ BSP_OBJECTS= \
 	$(BSP_OBJECTS_DIR)/usart.o \
 	$(BSP_OBJECTS_DIR)/watchdog.o \
 	$(BSP_OBJECTS_DIR)/Indicator_Driver.o \
-<<<<<<< HEAD
 	$(BSP_OBJECTS_DIR)/can_driver.o \
-=======
 	$(BSP_OBJECTS_DIR)/twi_at90can128.o \
->>>>>>> dbca08f8d011bbae86831a50d3988eb782101227
 	$(BSP_OBJECTS_DIR)/main.o
 
 
