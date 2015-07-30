@@ -1,20 +1,20 @@
 /****************************************************************** 
-* watchdog.c
-* Created on: Jul 13, 2015
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-* 
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-*© 2015
-*****************************************************************/ 
+ * watchdog.c
+ * Created on: Jul 13, 2015
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ *© 2015
+ *****************************************************************/
 #ifndef watchdog_C_
- #define watchdog_C_
+#define watchdog_C_
 #endif
 /**
  * \addtogroup watchdog_module
@@ -26,6 +26,7 @@
 /*    I N C L U D E   F I L E S                                   */
 /******************************************************************/
 #include <watchdog.h>
+#include <avr\wdt.h>
 
 
 /*******************************************************************************************/
@@ -58,8 +59,8 @@
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
-void wdt_reset(void){
-		asm("WDR");				//avoiding reset of the program
+void watchdog_reset(void){
+	wdt_reset();
 }
 
 /**********************************************************************************//**
@@ -74,11 +75,8 @@ void wdt_reset(void){
  ****************************************************************************************/
 void watchdog_off(void)
 {
-    /* Write logical one to WDCE and WDE */
-    WDTCR = (1<<WDCE) | (1<<WDE);
-    /* Turn off WDT */
-    WDTCR = 0x00;
-    return;
+	wdt_disable();
+	return;
 }
 /**********************************************************************************//**
  *  \param[in] param Description of the  parameter of the function.
@@ -90,11 +88,11 @@ void watchdog_off(void)
  *  \warning Pending for Review
  *  \author Author
  ****************************************************************************************/
-void watchdog_on(void)
+void watchdog_on(WATCHDOG_COMMON_TIMES param)
 {
-    /* Write logical one to WDCE and WDE */
-    WDTCR |= (1<<WDCE) | (1<<WDE);
-    return;
+	/* Write logical one to WDCE and WDE */
+	wdt_enable(param);
+	return;
 }
 
 /**********************************************************************************//**
