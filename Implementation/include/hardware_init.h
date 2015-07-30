@@ -59,6 +59,8 @@
  DDR_OUTPUT(LED_Err_PIN,LED_Err_DDR_PORT); \
  psbi(LED_Err_PORT,LED_Err_PIN);
 
+
+hardware_init_EXTERN void CAN_Main_Board_Init(void);
 /** @}*/
 
 #endif /* IMPLEMENTATION_INCLUDE_HARDWARE_INIT_H_ */
