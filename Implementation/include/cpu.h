@@ -28,7 +28,17 @@
 #include <avr/iocan128.h>
 #include <board_configs.h>
 
+#ifndef TRUE
+#define TRUE        ( 1 )
+#endif
 
+#ifndef FALSE
+#define FALSE       ( 0 )
+#endif
+
+#ifndef NULL
+#define NULL         ( (void*) ( 0 ) )
+#endif
 
 /** AT90CAN BOARD XTAL  */
 #define OSCSPEED					BOARD_MAIN_CLOCK		/* in Hz */
