@@ -79,6 +79,7 @@
 
 
 watchdog_EXTERN void watchdog_off(void);
-watchdog_EXTERN void wdt_reset(void);
+watchdog_EXTERN void watchdog_reset(void);
+watchdog_EXTERN void watchdog_on(WATCHDOG_COMMON_TIMES param);
 
 #endif/* IMPLEMENTATION_INCLUDE_WATCHDOG_H_ */
