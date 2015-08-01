@@ -185,6 +185,65 @@ Can_timmer_type Get_CAN_TTC_Timmer(void){
 	can_ttc_timer_read += (CANTTCL);
 	return can_ttc_timer_read;
 }
+
+#define MAIL_BOX_MAX			15
+
+void Can_Driver_Init(void){
+	uint8_t mob=0;
+
+	Reset_Can_Controller();
+
+	/* CAN General Control Register */
+	for (mob = 0; mob < MAIL_BOX_MAX; mob++){
+		// Set the MOb page number for each MOb 0 to 14 (15 MObs total)
+		//CANPAGE = (mob << MOBNB0);
+		Set_MailBox(mob);
+		// Set each MOb configuration to disabled
+		Can_Mob_Disable();
+		//CANCDMOB = 0;
+		// Clear all the MOb interrupt/polling flags
+		Can_Mob_ClrStatus_Flags();
+		//CANSTMOB = 0;
+    }
+
+	/*BAUDRATE CONFIG*/
+	CANBT1 = 0x06;
+	CANBT2 = 0x04;
+	CANBT3 = 0x13;
+
+	//TODO: Check !!
+	Enable_Can_Controller();
+
+}
+
+void CAN_MOB_Interrupt_Control(uint8_t mob,uint8_t enable){
+
+	if(mob > 7){
+		CANIE1=(enable << mob);
+	}else{
+		CANIE2=(enable << mob);
+	}
+	return;
+}
+
+
+uint8_t CAN_Get_Status_Interrupt(uint8_t mob){
+	uint8_t status_interrupt;
+
+	status_interrupt=0;
+
+	if(mob > 7){
+		status_interrupt=( CANIE2 & (1<<mob));
+	}else{
+		status_interrupt=( CANIE1 & (1<<mob));
+	}
+	return status_interrupt;
+}
+
+
+void Can_Configure_MailBox(MBox_type mailbox,CAN_Mode_type mode,can_dlc_type data_l,CAN_ID_type id){
+
+}
 /*******************************************************************************************/
 /*    F U N C T I O N   P R O T O T Y P E S                                                */
 /*******************************************************************************************/
