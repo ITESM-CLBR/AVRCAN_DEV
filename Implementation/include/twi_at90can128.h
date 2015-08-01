@@ -1,8 +1,9 @@
 /*---------------------------------------------------------------------------*/
 /**
- *  /file twi_at90can128.h
- *  /author
- *  /brief Created on: 13/07/2015
+ *  \file twi_at90can128.h
+ *  \author Roberto Alejandro Flores Estrada
+ *  \since 13/07/2015
+ *
  */
 
 #ifndef TWI_AT90CAN128_H_
@@ -19,6 +20,7 @@
 #define TWDR_DEFAULT            ( 0xFF )
 #define TWPS_VALUE              ( 0x00 )
 #define TW_SCL_FREQ             ( 1000 )
+
 #define TWBR_VALUE              ( ( ( OSCSPEED ) \
                                 - 16 * ( TW_SCL_FREQ ) ) \
                                 >> ( ( 2 * ( TWPS_VALUE ) ) + 1 ) ) \
@@ -27,8 +29,10 @@
 #define TW_GLOBAL_CALL_ON       ( 0x01 )
 #define TW_BIT_ON               ( 0x01 )
 #define TW_BIT_OFF              ( 0x00 )
-
-typedef union TWControlRegisterBitfields /**< */
+/*
+ * \f$ TWBR=\frac{(clock_freq-16(twi_freq))>>(2TWPS+1)}{twi_freq} \f$
+ */
+typedef union TWControlRegisterBitfields
 {
     struct
     {
