@@ -42,54 +42,22 @@ void HexByte(uint8_t val);
 void HExChar(uint8_t inval){
 	uint8_t ret_hex='0';
 	switch(inval){
-	case 0:
-		ret_hex='0';
-		break;
-	case 1:
-		ret_hex='1';
-		break;
-	case 2:
-		ret_hex='2';
-		break;
-	case 3:
-		ret_hex='3';
-		break;
-	case 4:
-		ret_hex='4';
-		break;
-	case 5:
-		ret_hex='5';
-		break;
-	case 6:
-		ret_hex='6';
-		break;
-	case 7:
-		ret_hex='7';
-		break;
-	case 8:
-		ret_hex='8';
-		break;
-	case 9:
-		ret_hex='9';
-		break;
-	case 10:
-		ret_hex='A';
-		break;
-	case 11:
-		ret_hex='B';
-		break;
-	case 12:
-		ret_hex='C';
-		break;
-	case 13:
-		ret_hex='D';
-		break;
-	case 14:
-		ret_hex='E';
-		break;
-	case 15:
-		ret_hex='F';
-		break;
+	 case 0: ret_hex='0'; break;
+	 case 1: ret_hex='1'; break;
+	 case 2: ret_hex='2'; break;
+	 case 3: ret_hex='3'; break;
+	 case 4: ret_hex='4'; break;
+	 case 5: ret_hex='5'; break;
+	 case 6: ret_hex='6'; break;
+	 case 7: ret_hex='7'; break;
+	 case 8: ret_hex='8'; break;
+	 case 9: ret_hex='9'; break;
+	case 10: ret_hex='A'; break;
+	case 11: ret_hex='B'; break;
+	case 12: ret_hex='C'; break;
+	case 13: ret_hex='D'; break;
+	case 14: ret_hex='E'; break;
+	case 15: ret_hex='F'; break;
 	};
 
 	PUT_CHAR_STDOUT(ret_hex);
