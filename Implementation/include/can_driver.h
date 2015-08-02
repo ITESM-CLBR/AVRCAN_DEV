@@ -34,6 +34,24 @@ typedef enum{
 	CAN_VERSION_2A=0,
 	CAN_VERSION_2B
 }CAN__STD_PROTOCOL;
+
+typedef enum{
+	MOB_DISABLED=0,
+	MOB_TX_DATA_FRAME,
+	MOB_TX_REMOTE_FRAME,
+	MOB_RX_DATA_FRAME,
+	MOB_RX_REMOTE_FRAME,
+	MOB_RX_REMO_FRAME_THEN_TX_DATA_FRAME_REPLY,
+	MOB_FRAME_BUFFER_MODE
+}MOB_MODES;
+
+typedef enum{
+	MAIL_BOX_DISABLE=0,
+	MAIL_BOX_ENABLE_TX,
+	MAIL_BOX_ENABLE_RX,
+	MAIL_BOX_FRAME_BUFFER_RECEPTION
+}MOB_SIMPLE_MODE;
+
 //can_driver_EXTERN	
 #define CAN_VERSION_SUPPORTED CAN_VERSION_2A
 
@@ -78,10 +96,12 @@ can_driver_EXTERN void Can_Set_IDMask(CAN_ID_type mask_id);
  *  \warning Warning.
  *  \author Author
  ****************************************************************************************/
+#define DLC_MSK     ((1<<DLC3)|(1<<DLC2)|(1<<DLC1)|(1<<DLC0))            //! MaSK for Data Length Coding
+ 
 #define Standby_Can_Controller()		 CANGCON = ( CANGCON & (~(1 << ENASTB)) )
 #define Can_Get_FifoPosition()	   		(CANPAGE & 0x07)
 #define Get_MailBox()			   		((CANPAGE >> 4) & 0x0F)
-#define Set_MailBox(mbox)				(CANPAGE|=(mbox << 4))
+#define Set_MailBox(mbox)				(CANPAGE=(mbox << 4))
 
 //Mail Box Operation
 #define Can_Mob_ClrStatus_Flags()			(CANSTMOB=0x00)
@@ -90,7 +110,9 @@ can_driver_EXTERN void Can_Set_IDMask(CAN_ID_type mask_id);
 #define Can_Mob_RX_OK()						(CANSTMOB & (1<<RX_OK))
 #define Can_Mob_BitError()					(CANSTMOB & (1<<BERR))
 #define Can_Mob_Disable()					(CANCDMOB=0x00)
-
+#define can_config_mail_box_mode(mode)		(CANCDMOB |= (mode<<CONMOB0))
+#define Can_set_dlc(dlc)  					(CANCDMOB |= (dlc))
+#define Can_get_dlc()      					((CANCDMOB &  DLC_MSK)     >> DLC0   )
 //#define Can_config_rx() 		CANCDMOB |= (MAIL_BOX_ENABLE_RX << CONMOB_OFFSET);
 /**
  * @}
