@@ -54,7 +54,7 @@ CAN_ID_type Get_CAN_ID(void){
 	idcan=((CAN_ID_type)((CANIDT1 << CAN2A_CANIDX1_OFFSET) & MASK_CAN2A_CANIDX1)) + ((CAN_ID_type)( MASK_CAN2A_CANIDX2 &(CANIDT2 >> CAN2A_CANIDX2_OFFSET)));
 
 #else
- #error " CAN Identifier Tag Registers V2.0 part B is not supported"
+#error " CAN Identifier Tag Registers V2.0 part B is not supported"
 #endif
 
 	return idcan;
@@ -75,7 +75,7 @@ CAN_ID_type Get_Mask_ID(void){
 #if CAN_VERSION_SUPPORTED == CAN_VERSION_2A
 	mask_idcan=((CAN_ID_type)((CANIDM1 << CAN2A_CANIDX1_OFFSET) & MASK_CAN2A_CANIDX1)) + ((CAN_ID_type)( MASK_CAN2A_CANIDX2 &(CANIDM2 >> CAN2A_CANIDX2_OFFSET)));
 #else
- #error " CAN Identifier Tag Registers V2.0 part B is not supported"
+#error " CAN Identifier Tag Registers V2.0 part B is not supported"
 #endif
 
 	return mask_idcan;
@@ -99,7 +99,7 @@ void Can_Set_MSG_ID(CAN_ID_type input_id){
 	idreg= (uint8_t)(0xE0 & (input_id << 5));
 	CANIDT2=idreg;
 #else
- #error " CAN Identifier Tag Registers V2.0 part B is not supported"
+#error " CAN Identifier Tag Registers V2.0 part B is not supported"
 #endif
 	return;
 }
@@ -124,7 +124,7 @@ void Can_Set_IDMask(CAN_ID_type mask_id){
 	mask_reg= (uint8_t)(0xE0 & (mask_id << 5));
 	CANIDM2=mask_reg;
 #else
- #error " CAN Identifier Tag Registers V2.0 part B is not supported"
+#error " CAN Identifier Tag Registers V2.0 part B is not supported"
 #endif
 }
 
@@ -204,7 +204,7 @@ void Can_Driver_Init(void){
 		// Clear all the MOb interrupt/polling flags
 		Can_Mob_ClrStatus_Flags();
 		//CANSTMOB = 0;
-    }
+	}
 
 	/*BAUDRATE CONFIG*/
 	CANBT1 = 0x06;
@@ -226,7 +226,9 @@ void CAN_MOB_Interrupt_Control(uint8_t mob,uint8_t enable){
 	return;
 }
 
-
+void CAN_MOB_SimpleMode_Set(CAN_Mode_type mode){
+	can_config_mail_box_mode(mode);
+}
 uint8_t CAN_Get_Status_Interrupt(uint8_t mob){
 	uint8_t status_interrupt;
 
@@ -242,7 +244,10 @@ uint8_t CAN_Get_Status_Interrupt(uint8_t mob){
 
 
 void Can_Configure_MailBox(MBox_type mailbox,CAN_Mode_type mode,can_dlc_type data_l,CAN_ID_type id){
-
+	Set_MailBox(mailbox);
+	CAN_MOB_SimpleMode_Set(mode);
+	Can_set_dlc(8);
+	Can_Set_MSG_ID(id);
 }
 /*******************************************************************************************/
 /*    F U N C T I O N   P R O T O T Y P E S                                                */
