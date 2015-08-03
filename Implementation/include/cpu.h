@@ -23,10 +23,10 @@
 #define cpu_EXTERN
 #endif /* cpu_C_ */
 
+#include <board_configs.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/iocan128.h>
-#include <board_configs.h>
+
 
 #ifndef TRUE
 #define TRUE        ( 1 )
