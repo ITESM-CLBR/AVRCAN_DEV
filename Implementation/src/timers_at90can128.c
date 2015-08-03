@@ -22,19 +22,19 @@ void tmr0At90can128Init( uint8_t clksrc, uint8_t wfg, uint8_t compm )
 	compm   =  ( compm << COM0A0 ) & TMR0_COMP_MASK;
 	if ( wfg == TMR0_WFG_FPWM )
 	{
-		wfg = ( TRUE << WGM00 ) | ( TRUE << WGM01 );
+		wfg = TMR0_FAST_PWM;
 	}
 	else if ( wfg == TMR0_WFG_CTC )
 	{
-		wfg = ( FALSE << WGM00 ) | ( TRUE << WGM01 );
+		wfg = TMR0_CLR_TIME_COMP;
 	}
 	else if ( wfg == TMR0_WFG_PHC_PWM )
 	{
-		wfg = ( TRUE << WGM00 ) | ( FALSE << WGM01 );
+		wfg = TMR0_PHASE_CHG_PWM;
 	}
 	else
 	{
-		wfg = ( FALSE << WGM00 ) | ( FALSE << WGM01 );
+		wfg = TMR0_NORMAL_MODE;
 	}
     TCCR0A  =  wfg | clksrc | compm;
 }
