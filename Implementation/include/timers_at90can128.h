@@ -49,6 +49,10 @@ typedef enum
 #define TMR0_T0_PORT_DIR    ( DDRD )
 #define TMR0_T0_PIN         ( PD7  )
 
+#define TMR0_FAST_PWM       ( ( TRUE << WGM00 ) | ( TRUE << WGM01 ) )
+#define TMR0_CLR_TIME_COMP	( ( FALSE << WGM00 ) | ( TRUE << WGM01 ) )
+#define TMR0_PHASE_CHG_PWM  ( ( TRUE << WGM00 ) | ( FALSE << WGM01 ) )
+#define TMR0_NORMAL_MODE    ( ( FALSE << WGM00 ) | ( FALSE << WGM01 ) )
 #define INPUT_OC0A( )       TMR0_OC0A_PORT_DIR = \
 							( TMR0_OC0A_PORT_DIR & ~( TRUE << TMR0_OC0A_PIN ) )
 #define OUTPUT_OC0A( )      TMR0_OC0A_PORT_DIR = \
