@@ -29,7 +29,7 @@ static uint8_t twiInProgress = 0;                  /**< Indicates the data
 /**************************************************************************//**
  *  \fn      void TWI_at90can128_Init( uint8_t gCallEnable, uint8_t address,
                           uint8_t baudrate, uint8_t prescaler  )
- *  \param   GCallEnable uint8_t Enables support for general call
+ *  \param   gCallEnable uint8_t Enables support for general call
  *  \param   address    uint8_t slave mode address
  *  \param   baudrate   uint8_t transfer bit rate
  *  \param   prescaler  uint8_t Determines the interface frequency.
@@ -145,7 +145,6 @@ uint8_t TWI_at90can128_sendMsg( uint8_t address, uint8_t *data,
 
 /**************************************************************************//**
  *  \fn uint8_t TWI_at90can128_getData( void )
- *  \param  none
  *  \brief  Read received data in master mode.
  *  \return none
  *****************************************************************************/
@@ -156,7 +155,6 @@ uint8_t* TWI_at90can128_getData( void )
 
 /**************************************************************************//**
  * \fn uint8_t TWI_at90can128_isBusy( void )
- * \param none
  * \brief Returns true if there is a pending operation in Master mode.
  * \return uint8_t Boolean value
  *****************************************************************************/
@@ -167,7 +165,6 @@ uint8_t TWI_at90can128_isBusy( void )
 
 /**************************************************************************//**
  *  \fn     uint8_t TWI_at90can128_evaluateStep( void )
- *  \param  none
  *  \brief  Decodes the current status to determine what to
  *          write into the Control register.
  *  \return uint8_t Returns the two wire interface current status
@@ -179,7 +176,7 @@ uint8_t TWI_at90can128_evaluateStep( void )
 
     tbf.byte = TWCR;
     /**
-     * \par Behavior\n\n
+     * \par Behavior
      */
     switch ( ret )
     {
