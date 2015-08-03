@@ -29,32 +29,60 @@
 #include <cpu.h>
 volatile can_Ir_lock mutex_reg;
 volatile can_event	event_can;
-
+volatile can_event	event_can_dummy;
+volatile MBox_type mail_box_no;
 volatile CanMW_MBox test_01;
+
+#define Event_Set_ISR()			event_can=1
+
+#define Set_Event_to_ISRAPP()		event_can_dummy=1
+#define Clr_Event_to_ISRAPP()		event_can_dummy=0
+#define Get_Event_to_ISRAPP()		(event_can_dummy)
+
+#define CAN_MIDLEWARE_RX_MESSAGES_FILL_ON_INT	1
 /*******************************************************************************************/
 /*    M A C R O S                                                                          */
 /*******************************************************************************************/
-void CanMW_ReceivedRxHandle(void){
-	can_dlc_type dlcw_reg=0;
-	can_dlc_type j=0;
-	uint8_t place=0;
-	can_message_data candata=0;
+void CanMw_MailBox_Rx_Handler(MBox_type mail_box_no){
+		can_dlc_type dlcw_reg=0;
+		can_dlc_type j=0;
+		uint8_t place=0;
+		can_message_data candata=0;
 
-	dlcw_reg=can_get_dlc();
-	test_01.msg->dlc=dlcw_reg;
-	test_01.msg->message_id=Get_CAN_ID();
-	//Message_A.message_id=Get_CAN_ID();
-	//dlcw=can_get_dlc();
-	for(j=0; j<dlcw_reg; j++){
-		place=Can_Get_FifoPosition();
-		candata=CANMSG;
-		test_01.msg->data[place]=candata;
-	}
+		dlcw_reg=can_get_dlc();
+		test_01.msg->dlc=dlcw_reg;
+		test_01.msg->message_id=Get_CAN_ID();
+		for(j=0; j<dlcw_reg; j++){
+			place=Can_Get_FifoPosition();
+			candata=CANMSG;
+			test_01.msg->data[place]=candata;
+		}
+}
+void CanMW_ReceivedRxHandle(void){
+	mail_box_no=can_highest_priority_mob();
+
+	#if CAN_MIDLEWARE_RX_MESSAGES_FILL_ON_INT == 1
+	  CanMw_MailBox_Rx_Handler(mail_box_no);
+	  Event_Set_ISR();
+	#else
+	  Set_Event_to_ISRAPP();
+	#endif
+}
+
+void CanMw_Update_App(void){
+   #if CAN_MIDLEWARE_RX_MESSAGES_FILL_ON_INT == 1
+
+   #else
+   if(Get_Event_to_ISRAPP()){
+    CanMw_MailBox_Rx_Handler(mail_box_no);
+    Event_Set_ISR();
+   }
+   #endif
 }
 
 void CanMW_APP_Init(void){
 	event_can=0;
-
+	event_can_dummy=0;
 }
 void CAN_Lib_Get_Errors(void){
 
@@ -69,14 +97,11 @@ can_Ir_lock CanMW_get_mutex(void){
 	return mutex_reg;
 }
 
-void CanMW_Event_Set(void){
-	event_can=1;
-}
 can_event CanMW_Event_Get(void){
 	return event_can;
 }
 void CanMW_Event_Clean(void){
-	event_can=1;
+	event_can=0;
 }
 /*******************************************************************************************/
 /*    F U N C T I O N   P R O T O T Y P E S                                                */
