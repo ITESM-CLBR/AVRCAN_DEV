@@ -116,7 +116,9 @@ void Can_Configure_MailBox(MBox_type mailbox,CAN_Mode_type mode,can_dlc_type dat
 #define can_ctrl_reset_controller()			CANGCON |= (1 << SWRES)
 #define can_ctrl_enable_controller()		CANGCON |= (1 << ENASTB)
 #define can_ctrl_standby_controller()		CANGCON = ( CANGCON & (~(1 << ENASTB)) )
-
+#define can_highest_priority_mob()				((0x0F)&(CANHPMOB >> 4))
+#define can_clear_flags_registers()     CANSTMOB &= 0x9F; \
+										CANCDMOB = 0
 /**
  * @}
  */
