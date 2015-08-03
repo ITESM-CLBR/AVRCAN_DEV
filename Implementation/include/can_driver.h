@@ -30,6 +30,15 @@
 #include <stdint.h>
 #include <can_types.h>
 
+#define CONFIG_ALL_INTERRUPTS                1
+#define CONFIG_BUS_OFF_INTERRUPT             0
+#define CONFIG_CAN_RECEIVE_INTERRUPT         1
+#define CONFIG_CAN_TX_INTERRUPT              0
+#define CONFIG_MOB_ERRORS_INTERRUPT          0
+#define CONFIG_FRAME_BUFFER_INTERRUPT        0
+#define CONFIG_GENERAL_ERRORS_INTERRUPT      0
+#define CONFIG_CAN_TIMER_OVERRUN_INTERRUPT   0
+
 typedef enum{
 	CAN_VERSION_2A=0,
 	CAN_VERSION_2B
@@ -60,6 +69,7 @@ can_driver_EXTERN CAN_ID_type Get_CAN_ID(void);
 can_driver_EXTERN CAN_ID_type Get_Mask_ID(void);
 can_driver_EXTERN void Can_Set_MSG_ID(CAN_ID_type input_id);
 can_driver_EXTERN void Can_Set_IDMask(CAN_ID_type mask_id);
+void Can_Configure_MailBox(MBox_type mailbox,CAN_Mode_type mode,can_dlc_type data_l,CAN_ID_type mbox_id,CAN_ID_type mbox_mask,can_int_ctrl enable_int);
 
 // INTERRUPTS SECTION
 #define ENABLE_ALL_INTERRUPTS()						CANGIE |= (1<<ENIT)
@@ -71,49 +81,42 @@ can_driver_EXTERN void Can_Set_IDMask(CAN_ID_type mask_id);
 #define ENABLE_GENERAL_ERRORS_INTERRUPT()			CANGIE |= (1<<ENERG)
 #define ENABLE_CAN_TIMER_OVERRUN_INTERRUPT()		CANGIE |= (1<<ENOVRT)
 
-#define DISABLE_ALL_INTERRUPTS()					CANGIE = (CANGIE & (~(1<<ENIT)   )
-#define DISABLE_BUS_OFF_INTERRUPT()					CANGIE = (CANGIE & (~(1<<ENBOFF) )
-#define DISABLE_CAN_RECEIVE_INTERRUPT()				CANGIE = (CANGIE & (~(1<<ENRX)   )
-#define DISABLE_CAN_TX_INTERRUPT()					CANGIE = (CANGIE & (~(1<<ENTX)   )
-#define DISABLE_MOB_ERRORS_INTERRUPT()				CANGIE = (CANGIE & (~(1<<ENERR)  )
-#define DISABLE_FRAME_BUFFER_INTERRUPT()			CANGIE = (CANGIE & (~(1<<ENBX)   )
-#define DISABLE_GENERAL_ERRORS_INTERRUPT()			CANGIE = (CANGIE & (~(1<<ENERG)  )
-#define DISABLE_CAN_TIMER_OVERRUN_INTERRUPT()		CANGIE = (CANGIE & (~(1<<ENOVRT) )
+#define DISABLE_ALL_INTERRUPTS()					CANGIE = (CANGIE & (~(1<<ENIT)   ))
+#define DISABLE_BUS_OFF_INTERRUPT()					CANGIE = (CANGIE & (~(1<<ENBOFF) ))
+#define DISABLE_CAN_RECEIVE_INTERRUPT()				CANGIE = (CANGIE & (~(1<<ENRX)   ))
+#define DISABLE_CAN_TX_INTERRUPT()					CANGIE = (CANGIE & (~(1<<ENTX)   ))
+#define DISABLE_MOB_ERRORS_INTERRUPT()				CANGIE = (CANGIE & (~(1<<ENERR)  ))
+#define DISABLE_FRAME_BUFFER_INTERRUPT()			CANGIE = (CANGIE & (~(1<<ENBX)   ))
+#define DISABLE_GENERAL_ERRORS_INTERRUPT()			CANGIE = (CANGIE & (~(1<<ENERG)  ))
+#define DISABLE_CAN_TIMER_OVERRUN_INTERRUPT()		CANGIE = (CANGIE & (~(1<<ENOVRT) ))
 
 
 
-/** This auto resettable bit only resets the CAN controller. */
-#define Reset_Can_Controller()			CANGCON |= (1 << SWRES)
-#define Enable_Can_Controller()			CANGCON |= (1 << ENASTB)
-
-/**********************************************************************************//**
- *  \param[in] param Description of the  parameter of the function.
- *  \param[out] param Description of the  parameter of the function.
- *  \return 0
- *  \brief Module Description
- *  \see See more information Here !!
- *  \note First Implementation 6:05:51 PM Jul 30, 2015
- *  \warning Warning.
- *  \author Author
- ****************************************************************************************/
 #define DLC_MSK     ((1<<DLC3)|(1<<DLC2)|(1<<DLC1)|(1<<DLC0))            //! MaSK for Data Length Coding
  
-#define Standby_Can_Controller()		 CANGCON = ( CANGCON & (~(1 << ENASTB)) )
+#define get_high_priority_mob()			(CANHPMOB >> 0x04)
 #define Can_Get_FifoPosition()	   		(CANPAGE & 0x07)
 #define Get_MailBox()			   		((CANPAGE >> 4) & 0x0F)
 #define Set_MailBox(mbox)				(CANPAGE=(mbox << 4))
 
-//Mail Box Operation
-#define Can_Mob_ClrStatus_Flags()			(CANSTMOB=0x00)
-#define Can_Mob_get_DLCW()					(CANSTMOB & (1<<DLCW))
-#define Can_Mob_TX_OK()						(CANSTMOB & (1<<TX_OK))
-#define Can_Mob_RX_OK()						(CANSTMOB & (1<<RX_OK))
-#define Can_Mob_BitError()					(CANSTMOB & (1<<BERR))
-#define Can_Mob_Disable()					(CANCDMOB=0x00)
+// Can MailBox Status Flags
+#define can_mob_clear_status_flags()		(CANSTMOB=0x00)
+#define can_mob_check_dlc_warning()		    (CANSTMOB & (1<<DLCW))
+#define can_mob_check_tx_complete()			(CANSTMOB & (1<<TX_OK))
+#define can_mob_check_rx_complete()			(CANSTMOB & (1<<RXOK))
+#define can_mob_check_biterror()            (CANSTMOB & (1<<BERR))
+
+// Mail Box Operations
+#define can_mail_box_disable()				(CANCDMOB=0x00)
 #define can_config_mail_box_mode(mode)		(CANCDMOB |= (mode<<CONMOB0))
-#define Can_set_dlc(dlc)  					(CANCDMOB |= (dlc))
-#define Can_get_dlc()      					((CANCDMOB &  DLC_MSK)     >> DLC0   )
-//#define Can_config_rx() 		CANCDMOB |= (MAIL_BOX_ENABLE_RX << CONMOB_OFFSET);
+#define can_set_dlc(dlc)  					(CANCDMOB |= (dlc))
+#define can_get_dlc()      					((CANCDMOB &  DLC_MSK)     >> DLC0   )
+
+// Can Controller POWER STANDBY  OFF
+#define can_ctrl_reset_controller()			CANGCON |= (1 << SWRES)
+#define can_ctrl_enable_controller()		CANGCON |= (1 << ENASTB)
+#define can_ctrl_standby_controller()		CANGCON = ( CANGCON & (~(1 << ENASTB)) )
+
 /**
  * @}
  */

@@ -33,4 +33,5 @@ typedef uint16_t Can_timmer_type;
 typedef uint8_t  MBox_type;
 typedef uint8_t  CAN_Mode_type;
 typedef uint8_t  can_dlc_type;
+typedef uint8_t  can_int_ctrl;
 #endif /* AVRCAN_DEV_IMPLEMENTATION_INCLUDE_CAN_TYPES_H_ */

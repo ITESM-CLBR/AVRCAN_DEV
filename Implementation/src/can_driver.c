@@ -191,7 +191,7 @@ Can_timmer_type Get_CAN_TTC_Timmer(void){
 void Can_Driver_Init(void){
 	uint8_t mob=0;
 
-	Reset_Can_Controller();
+	can_ctrl_reset_controller();
 
 	/* CAN General Control Register */
 	for (mob = 0; mob < MAIL_BOX_MAX; mob++){
@@ -199,10 +199,10 @@ void Can_Driver_Init(void){
 		//CANPAGE = (mob << MOBNB0);
 		Set_MailBox(mob);
 		// Set each MOb configuration to disabled
-		Can_Mob_Disable();
+		can_mail_box_disable();
 		//CANCDMOB = 0;
 		// Clear all the MOb interrupt/polling flags
-		Can_Mob_ClrStatus_Flags();
+		can_mob_clear_status_flags();
 		//CANSTMOB = 0;
 	}
 
@@ -212,7 +212,7 @@ void Can_Driver_Init(void){
 	CANBT3 = 0x13;
 
 	//TODO: Check !!
-	Enable_Can_Controller();
+	can_ctrl_enable_controller();
 
 }
 
@@ -242,12 +242,64 @@ uint8_t CAN_Get_Status_Interrupt(uint8_t mob){
 	return status_interrupt;
 }
 
+void Can_Service_Interrupt_control(void){
+#if CONFIG_ALL_INTERRUPTS == 1
+	ENABLE_ALL_INTERRUPTS();
+#else
+	DISABLE_ALL_INTERRUPTS();
+#endif
 
-void Can_Configure_MailBox(MBox_type mailbox,CAN_Mode_type mode,can_dlc_type data_l,CAN_ID_type id){
+#if CONFIG_BUS_OFF_INTERRUPT == 1
+	ENABLE_BUS_OFF_INTERRUPT();
+#else
+	DISABLE_BUS_OFF_INTERRUPT();
+#endif
+
+#if CONFIG_CAN_RECEIVE_INTERRUPT == 1
+	ENABLE_CAN_RECEIVE_INTERRUPT();
+#else
+	DISABLE_CAN_RECEIVE_INTERRUPT();
+#endif
+
+#if CONFIG_CAN_TX_INTERRUPT == 1
+	ENABLE_CAN_TX_INTERRUPT();
+#else
+	DISABLE_CAN_TX_INTERRUPT();
+#endif
+
+#if CONFIG_MOB_ERRORS_INTERRUPT == 1
+	ENABLE_MOB_ERRORS_INTERRUPT();
+#else
+	DISABLE_MOB_ERRORS_INTERRUPT();
+#endif
+
+#if CONFIG_FRAME_BUFFER_INTERRUPT == 1
+	ENABLE_FRAME_BUFFER_INTERRUPT();
+#else
+	DISABLE_FRAME_BUFFER_INTERRUPT();
+#endif
+
+#if CONFIG_GENERAL_ERRORS_INTERRUPT == 1
+	ENABLE_GENERAL_ERRORS_INTERRUPT();
+#else
+	DISABLE_GENERAL_ERRORS_INTERRUPT();
+#endif
+
+#if CONFIG_CAN_TIMER_OVERRUN_INTERRUPT == 1
+	ENABLE_CAN_TIMER_OVERRUN_INTERRUPT();
+#else
+	DISABLE_CAN_TIMER_OVERRUN_INTERRUPT();
+
+#endif
+	return;
+}
+void Can_Configure_MailBox(MBox_type mailbox,CAN_Mode_type mode,can_dlc_type data_l,CAN_ID_type mbox_id,CAN_ID_type mbox_mask,can_int_ctrl enable_int){
 	Set_MailBox(mailbox);
 	CAN_MOB_SimpleMode_Set(mode);
-	Can_set_dlc(8);
-	Can_Set_MSG_ID(id);
+	can_set_dlc(data_l);
+	Can_Set_MSG_ID(mbox_id);
+	Can_Set_IDMask(mbox_mask);
+	CAN_MOB_Interrupt_Control(mailbox,enable_int);
 }
 /*******************************************************************************************/
 /*    F U N C T I O N   P R O T O T Y P E S                                                */
