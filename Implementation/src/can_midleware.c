@@ -31,7 +31,7 @@ volatile can_Ir_lock mutex_reg;
 volatile can_event	event_can;
 volatile can_event	event_can_dummy;
 volatile MBox_type mail_box_no;
-volatile CanMW_MBox test_01;
+volatile CanMW_MBox MboxControlReg[3];
 
 #define Event_Set_ISR()			event_can=1
 
@@ -40,6 +40,7 @@ volatile CanMW_MBox test_01;
 #define Get_Event_to_ISRAPP()		(event_can_dummy)
 
 #define CAN_MIDLEWARE_RX_MESSAGES_FILL_ON_INT	1
+
 /*******************************************************************************************/
 /*    M A C R O S                                                                          */
 /*******************************************************************************************/
@@ -48,15 +49,18 @@ void CanMw_MailBox_Rx_Handler(MBox_type mail_box_no){
 		can_dlc_type j=0;
 		uint8_t place=0;
 		can_message_data candata=0;
-
+		Set_MailBox(mail_box_no);
 		dlcw_reg=can_get_dlc();
-		test_01.msg->dlc=dlcw_reg;
-		test_01.msg->message_id=Get_CAN_ID();
+		MboxControlReg[mail_box_no].msg->dlc=dlcw_reg;
+		MboxControlReg[mail_box_no].msg->message_id=(CAN_ID_type)Get_CAN_ID();
+		MboxControlReg[mail_box_no].msg->stamp=(can_tstamp)Get_Can_Time_Stamp();
+		MboxControlReg[mail_box_no].msg->ttc_timmer=(Can_timmer_type)Get_CAN_TTC_Timmer();
 		for(j=0; j<dlcw_reg; j++){
 			place=Can_Get_FifoPosition();
 			candata=CANMSG;
-			test_01.msg->data[place]=candata;
+			MboxControlReg[mail_box_no].msg->data[place]=candata;
 		}
+		can_clear_flags_registers();
 }
 void CanMW_ReceivedRxHandle(void){
 	mail_box_no=can_highest_priority_mob();
@@ -74,7 +78,9 @@ void CanMw_Update_App(void){
 
    #else
    if(Get_Event_to_ISRAPP()){
+	   mail_box_no=can_highest_priority_mob();
     CanMw_MailBox_Rx_Handler(mail_box_no);
+	
     Event_Set_ISR();
    }
    #endif
@@ -88,7 +94,9 @@ void CAN_Lib_Get_Errors(void){
 
 }
 void CanMW_InitMail_Box(MBox_type mailbox_num, CAN_Mode_type operation_mode,CanMw_Message	*msg_ptr){
-	test_01.msg=msg_ptr;
+	MboxControlReg[mailbox_num].msg=msg_ptr;
+	MboxControlReg[mailbox_num].mailbox=mailbox_num;
+	MboxControlReg[mailbox_num].mode=operation_mode;
 }
 void CanMW_set_mutex(can_Ir_lock state){
 	mutex_reg=state;

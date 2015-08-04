@@ -32,7 +32,7 @@ typedef enum{
 }CAN_INT_MUTEX;
 typedef uint8_t  can_event;
 typedef uint8_t  can_Ir_lock;
-typedef uint32_t CAN_ID_type;
+typedef uint16_t CAN_ID_type;
 typedef uint8_t  Can_err_type;
 typedef uint16_t Can_timmer_type;
 typedef uint8_t  MBox_type;

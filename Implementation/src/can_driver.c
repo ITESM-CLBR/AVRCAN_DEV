@@ -186,6 +186,13 @@ Can_timmer_type Get_CAN_TTC_Timmer(void){
 	return can_ttc_timer_read;
 }
 
+
+can_tstamp Get_Can_Time_Stamp(void){
+	can_tstamp stamp=0;
+	stamp += (CANSTMH << 8 );
+	stamp += (CANSTMH);
+ return stamp;
+}
 #define MAIL_BOX_MAX			15
 
 void Can_Driver_Init(void){

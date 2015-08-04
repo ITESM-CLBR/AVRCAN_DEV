@@ -42,6 +42,7 @@ typedef struct{
 	    can_dlc_type dlc;
 	can_message_data data[CAN_MW_LEN];
           can_tstamp stamp;
+          Can_timmer_type ttc_timmer;
 }CanMw_Message;
 
 typedef struct{

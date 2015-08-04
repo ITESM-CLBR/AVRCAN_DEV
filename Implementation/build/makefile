@@ -65,6 +65,7 @@ BSP_OBJECTS= \
 	$(BSP_OBJECTS_DIR)/twi_at90can128.o \
 	$(BSP_OBJECTS_DIR)/timers_at90can128.o \
 	$(BSP_OBJECTS_DIR)/hardware_init.o \
+	$(BSP_OBJECTS_DIR)/can_midleware.o \
 	$(BSP_OBJECTS_DIR)/main.o
 
 

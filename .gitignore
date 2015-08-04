@@ -6,6 +6,7 @@
 #	IGNORE DOXY	#
 #########################
 Documents/
+Implementation/build/ide/
 
 
 #########################
